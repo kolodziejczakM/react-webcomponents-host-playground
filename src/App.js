@@ -1,38 +1,11 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 // import 'native-webcomponents-playground';
 // import 'lit-element-webcomponents-playground';
-import 'stencil-webcomponents-playground';
+import "stencil-webcomponents-playground";
 
-const renderItJSXLike = () => {
-  return (
-    <featured-dropdown chosen-option={{ "label": "Poland", "value": "PL" }} options={[
-      { "label": "Poland", "value": "PL" },
-      { "label": "Germany", "value": "DE" },
-      { "label": "Sweden", "value": "SE" },
-      { "label": "Norway", "value": "NO" }
-    ]}>
-    </featured-dropdown> 
-  );
-};
-
-const renderForLit = () => {
-  return (
-    <featured-dropdown
-      chosen-option='{ "label": "Poland", "value": "PL" }'
-      options='[
-        { "label": "Poland", "value": "PL" },
-        { "label": "Germany", "value": "DE" },
-        { "label": "Sweden", "value": "SE" },
-        { "label": "Norway", "value": "NO" }
-      ]'
-    >
-    </featured-dropdown>
-  );
-}
-
-class StencilComponentWrapper extends React.Component {
+class StencilDropdownComponentWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
@@ -40,37 +13,92 @@ class StencilComponentWrapper extends React.Component {
 
   componentDidMount() {
     const node = this.myRef.current;
-    node.chosenOption = { "label": "Poland", "value": "PL" };
+    node.chosenOption = { label: "Poland", value: "PL" };
     node.options = [
-      { "label": "Poland", "value": "PL" },
-      { "label": "Germany", "value": "DE" },
-      { "label": "Sweden", "value": "SE" },
-      { "label": "Norway", "value": "NO" }
+      { label: "Poland", value: "PL" },
+      { label: "Germany", value: "DE" },
+      { label: "Sweden", value: "SE" },
+      { label: "Norway", value: "NO" }
     ];
+
+    this.myRef.current.addEventListener(
+      "dropdownValueChanged",
+      this.props.onChange
+    );
+  }
+
+  componentWillUnmount() {
+    this.myRef.current.removeEventListener(
+      "dropdownValueChanged",
+      this.props.onChange
+    );
   }
 
   render() {
-    return <featured-dropdown ref={this.myRef} ></featured-dropdown>;
+    return <featured-dropdown ref={this.myRef} />;
   }
 }
 
+class StencilButtonComponentWrapper extends React.Component {
+    constructor(props) {
+      super(props);
+      this.myRef = React.createRef();
+    }
+  
+    componentDidMount() {
+      const node = this.myRef.current;
+      node.label = "xdd";
+  
+      this.myRef.current.addEventListener(
+        "featuredButtonClicked",
+        this.props.onChange
+      );
+    }
+  
+    componentWillUnmount() {
+      this.myRef.current.removeEventListener(
+        "featuredButtonClicked",
+        this.props.onChange
+      );
+    }
+  
+    render() {
+      return <featured-button ref={this.myRef} />;
+    }
+  }
+
+  
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      received: ""
+    };
+
+    this.onDropdownChange = this.onDropdownChange.bind(this);
+    this.onButtonChange = this.onButtonChange.bind(this);
+  }
+
+  onDropdownChange(value) {
+    console.log("value: ", value);
+    this.setState({
+      received: value.detail.label
+    });
+  }
+
+  onButtonChange() {
+      console.log('onButtonChange');
+  }
+
   render() {
     return (
       <div className="App">
-        {/* {
-          renderItJSXLike()
-        } */}
+        <StencilDropdownComponentWrapper onChange={this.onDropdownChange} />
+        <StencilButtonComponentWrapper onChange={this.onButtonChange} label="Tralalala"/>
 
-        {/* {
-          renderForLit()
-        } */}
-        <StencilComponentWrapper />
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
+          <p>Received: {this.state.received}</p>
           <a
             className="App-link"
             href="https://reactjs.org"
