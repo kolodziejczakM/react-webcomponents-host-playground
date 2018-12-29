@@ -4,6 +4,8 @@ import "./App.css";
 // import 'native-webcomponents-playground';
 // import 'lit-element-webcomponents-playground';
 import "stencil-webcomponents-playground";
+import "@carbonic/button";
+import "@carbonic/dropdown";
 
 class StencilDropdownComponentWrapper extends React.Component {
   constructor(props) {
@@ -94,8 +96,9 @@ class StencilLogComponentWrapper extends React.Component {
     return <featured-log ref={this.myRef} />;
   }
 }
-
   
+const StencilCarbonicButton = () => <carbonic-button label="carbonic!" />
+
 class App extends Component {
   constructor() {
     super();
@@ -124,6 +127,7 @@ class App extends Component {
         <StencilDropdownComponentWrapper onChange={this.onDropdownChange} />
         <StencilButtonComponentWrapper onChange={this.onButtonChange} label="Tralalala"/>
         <StencilLogComponentWrapper />
+        <StencilCarbonicButton />
 
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
