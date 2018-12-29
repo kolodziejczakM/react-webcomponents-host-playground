@@ -65,7 +65,35 @@ class StencilButtonComponentWrapper extends React.Component {
     render() {
       return <featured-button ref={this.myRef} />;
     }
+}
+
+class StencilLogComponentWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
   }
+
+  componentDidMount() {
+    const node = this.myRef.current;
+    node.label = "log";
+
+    this.myRef.current.addEventListener(
+      "featuredLogClicked",
+      this.props.onChange
+    );
+  }
+
+  componentWillUnmount() {
+    this.myRef.current.removeEventListener(
+      "featuredLogClicked",
+      this.props.onChange
+    );
+  }
+
+  render() {
+    return <featured-log ref={this.myRef} />;
+  }
+}
 
   
 class App extends Component {
@@ -95,6 +123,7 @@ class App extends Component {
       <div className="App">
         <StencilDropdownComponentWrapper onChange={this.onDropdownChange} />
         <StencilButtonComponentWrapper onChange={this.onButtonChange} label="Tralalala"/>
+        <StencilLogComponentWrapper />
 
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
