@@ -1,10 +1,16 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-// import 'native-webcomponents-playground';
-// import 'lit-element-webcomponents-playground';
+// import '@polymer/lit-element'; - library that's needed by "lit-element-webcomponents-playground"
+// import 'native-webcomponents-playground'; - native webcomponent bundled without any polyfills. Working outside react (see index.html)
+// but not inside.
+
+// import "lit-element-webcomponents-playground"; - lit element component (common js) without lit-element bundled inside. That's why
+// there is lit-element installed (in client host) => see package.json. It's not working properly though.
 import "stencil-webcomponents-playground";
-import "@carbonic/button";
+import "@carbonic/button"; // the way we can use stencil in variation: versioning-per-component. It's working but bundle size is huge due to
+// need of independent loader for each package. There is a way to import proper component version via unpkg though which is not that problematic
+// but it's more for presentational use cases than real production use.
 import "@carbonic/dropdown";
 
 class StencilDropdownComponentWrapper extends React.Component {
@@ -46,58 +52,28 @@ class StencilButtonComponentWrapper extends React.Component {
       super(props);
       this.myRef = React.createRef();
     }
-  
+
     componentDidMount() {
       const node = this.myRef.current;
       node.label = "xdd";
-  
+
       this.myRef.current.addEventListener(
         "featuredButtonClicked",
         this.props.onChange
       );
     }
-  
+
     componentWillUnmount() {
       this.myRef.current.removeEventListener(
         "featuredButtonClicked",
         this.props.onChange
       );
     }
-  
+
     render() {
       return <featured-button ref={this.myRef} />;
     }
 }
-
-class StencilLogComponentWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-  }
-
-  componentDidMount() {
-    const node = this.myRef.current;
-    node.label = "log";
-
-    this.myRef.current.addEventListener(
-      "featuredLogClicked",
-      this.props.onChange
-    );
-  }
-
-  componentWillUnmount() {
-    this.myRef.current.removeEventListener(
-      "featuredLogClicked",
-      this.props.onChange
-    );
-  }
-
-  render() {
-    return <featured-log ref={this.myRef} />;
-  }
-}
-  
-const StencilCarbonicButton = () => <carbonic-button label="carbonic!" />
 
 class App extends Component {
   constructor() {
@@ -118,7 +94,7 @@ class App extends Component {
   }
 
   onButtonChange() {
-      console.log('onButtonChange');
+    console.log("onButtonChange");
   }
 
   render() {
@@ -126,8 +102,6 @@ class App extends Component {
       <div className="App">
         <StencilDropdownComponentWrapper onChange={this.onDropdownChange} />
         <StencilButtonComponentWrapper onChange={this.onButtonChange} label="Tralalala"/>
-        <StencilLogComponentWrapper />
-        <StencilCarbonicButton />
 
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
