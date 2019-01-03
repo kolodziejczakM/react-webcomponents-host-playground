@@ -6,11 +6,11 @@
     "@carbonic/button": "^0.0.2",
     "@carbonic/dropdown": "^0.0.2",
     "@polymer/lit-element": "^0.6.5",
-    "lit-element-webcomponents-playground": "github:kolodziejczakM/lit-element-webcomponents-playground#master",
+    "lit-element-webcomponents-playground": "github:kolodziejczakM/lit-element-webcomponents-playground#rollup-config-es6-bundle",
     "native-webcomponents-playground": "github:kolodziejczakM/native-webcomponents-playground#master",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1",
+    "react-scripts": "2.1.2",
     "stencil-webcomponents-playground": "github:kolodziejczakM/stencil-webcomponents-playground#master"
   },
   "scripts": {
