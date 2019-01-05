@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 // *esm === es6 module
 // client / host - repository where imported WebComponent(s) will be used.
+// Had to add 'SKIP_PREFLIGHT_CHECK=true' to .env file in this repo to make external bundles works
 
 /* Native WebComponent */
 
@@ -19,6 +20,9 @@ import * as serviceWorker from './serviceWorker';
 /* LitElement WebComponent */
 
 // Import of lit-element WebComponent (bundled in esm format) without lit-element library inside. 
+// Imho, there are two strategies:
+
+// 1. peerDependency strategy:
 // "@polymer/lit-element" library has to be installed (added to package.json) on client / host - because
 // it's defined inside WebComponent's package.json as a peerDependency. 
 
@@ -31,8 +35,30 @@ import * as serviceWorker from './serviceWorker';
 // manually install @polymer/lit-element to make that setup work.
 
 // This is the way we can support per-component-versioning without placing lit-element library in each bundled Lit-element's WebComponent.
-// I couldn't produce working "lit-element-webcomponents-playground" bundle in Webpack because it is not supporting esm bundles...
-// So...I did it in rollup.js, and it works :D: 
+// I couldn't produce working "lit-element-webcomponents-playground" bundle in Webpack (it is not supporting esm bundles and it's cjs bundles don't work)
+// So...I did it in Rollup.js and in Polymer - which is default bundling method.
+
+// Polymer bundle without lit-element works but it generates inner node_modules folder that needs to be excluded from gitignore to make that setup works.
+// In that setup defining peerDependencies makes no sense, we should probably investigate more tree-shaking in here (because imports aren't pointing to
+// @polymer/lit-element but the local version from inner node_modules with relative path.)
+// + in polymer config "bundle" flag needs to be set to false to not include polymer/lit-element in bundle.
+
+
+// Polymer bundle (esm) (#master branch) - WORKS.
+
+// Rollup bundle (esm) with peerDependency (#rollup-config-es6-bundle branch) - WORKS
+
+// Rollup bundle (cjs) with peerDependency (#rollup-config-cjs-bundle branch) - WORKS
+
+// Webpack bundle (cjs) with peerDependency (#webpack-cjs-bundle branch) - DOESN'T WORK
+
+// 2. Dependency / dependency strategy:
+
+// Instead of defining peerDependencies in LitElement WebComponent we could define LitElement as a standard dependency and then
+// it will be automatically installed o host when it is imported inside (no need to put developers to manually do it).
+// As long as each lit-element webcomponent will be using the same version we shouldn't end up with any problems.
+// That ensurance is must-have anyway.
+
 import "lit-element-webcomponents-playground";
 
 /* End of LitElement WebComponent */
